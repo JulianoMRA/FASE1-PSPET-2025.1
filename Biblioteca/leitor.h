@@ -1,3 +1,10 @@
+#ifndef LIB_H
+#define LIB_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct {
     int erro;            // Código de erro da leitura.
                          //  - 0: Não houve erro.
@@ -28,3 +35,9 @@ Reading read_image_path(const char* path);
 // 3. o tamanho do array em bytes
 // Retorna um struct Reading com a leitura realizada
 Reading read_image_data(const char* file_type, const unsigned char* file_data, int file_data_size);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
