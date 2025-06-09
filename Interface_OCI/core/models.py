@@ -22,4 +22,3 @@ class Prova(models.Model):
 
     def __str__(self):
         return f'Prova {self.id_prova} - Gabarito: {self.gabarito}'
-    
