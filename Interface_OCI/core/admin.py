@@ -2,15 +2,18 @@ from django.contrib import admin
 from .models import Escola, Participante, Prova
 
 # Register your models here.
+@admin.register(Escola)
 class EscolaAdmin(admin.ModelAdmin):
     list_display = ('id', 'nome')
     search_fields = ('nome',)
 
+@admin.register(Participante)
 class ParticipanteAdmin(admin.ModelAdmin):
     list_display = ('id_participante', 'nome', 'escola')
     search_fields = ('nome', 'id_participante')
     list_filter = ('escola',)
 
+@admin.register(Prova)
 class ProvaAdmin(admin.ModelAdmin):
     list_display = ('id_prova', 'gabarito')
-    search_fields = ('id_prova')
+    search_fields = ('id_prova',)
