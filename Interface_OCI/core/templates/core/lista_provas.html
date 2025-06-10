@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Provas</title>
+</head>
+<body>
+    <h1>Provas:</h1>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Gabarito</th>
+        </tr>
+        {% for prova in provas %}
+        <tr>
+            <td>{{ prova.id }}</td>
+            <td>{{ prova.gabarito }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{% url 'cadastrar_prova' %}">Nova Prova</a>
+</body>
+</html>

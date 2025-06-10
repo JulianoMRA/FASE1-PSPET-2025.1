@@ -46,3 +46,4 @@ def cadastrar_prova(request):
     else:
         form = ProvaForm()
     return render(request, 'core/cadastrar_prova.html', {'form': form})
+
