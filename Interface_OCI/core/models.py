@@ -1,7 +1,9 @@
 from django.db import models
 
-# Create your models here.
-
+# Este arquivo define os modelos do Django para a aplicação Interface_OCI.
+# Os modelos representam as tabelas do banco de dados e são usados para interagir com os dados.
+# Importante: Certifique-se de que o Django esteja configurado corretamente para usar este modelo.
+# Definindo os modelos para a aplicação Interface_OCI
 class Escola(models.Model):
     nome = models.CharField(max_length=64)
 

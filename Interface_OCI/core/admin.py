@@ -1,7 +1,9 @@
 from django.contrib import admin
 from .models import Escola, Participante, Prova
 
-# Register your models here.
+# Este arquivo registra os modelos do Django no painel de administração.
+# Isso permite que os modelos sejam gerenciados através da interface administrativa do Django.
+
 @admin.register(Escola)
 class EscolaAdmin(admin.ModelAdmin):
     list_display = ('id', 'nome')
