@@ -5,6 +5,9 @@ from .forms import ParticipanteForm, ProvaForm, EscolaForm
 # Este arquivo define as views da aplicação Interface_OCI.
 # As views são responsáveis por processar as requisições HTTP e retornar as respostas apropriadas.
 
+def index(request):
+    return render(request, 'core/index.html')
+
 def lista_escolas(request):
     escolas = Escola.objects.all()
     return render(request, 'core/lista_escolas.html', {'escolas': escolas})

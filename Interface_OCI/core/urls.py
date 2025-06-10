@@ -5,6 +5,7 @@ from . import views
 # As URLs são usadas para mapear requisições HTTP para as views correspondentes.
 
 urlpatterns = [
+    path('', views.index, name='index'),
     path('lista_escolas/', views.lista_escolas, name='lista_escolas'),
     path('lista_participantes/', views.lista_participantes, name='lista_participantes'),
     path('lista_provas/', views.lista_provas, name='lista_provas'),
