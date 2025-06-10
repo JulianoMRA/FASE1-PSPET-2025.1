@@ -18,6 +18,9 @@ def signup(request):
     return render(request, 'core/signup.html', {'form': form})
 
 def index(request):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    
     return render(request, 'core/index.html')
 
 @login_required
