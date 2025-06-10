@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Participantes</title>
+</head>
+<body>
+    <h1>Participantes:</h1>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Escola</th>
+        </tr>
+        {% for participante in participantes %}
+        <tr>
+            <td>{{ participante.id }}</td>
+            <td>{{ participante.nome }}</td>
+            <td>{{ participante.escola.nome }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{% url 'cadastrar_participante' %}">Adicionar Novo Participante</a>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Escolas</title>
+</head>
+<body>
+    <h1>Escolas:</h1>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+        </tr>
+        {% for escola in escolas %}
+        <tr>
+            <td>{{ escola.id }}</td>
+            <td>{{ escola.nome }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{% url 'cadastrar_escola' %}">Adicionar Nova Escola</a>
+</body>
+</html>
