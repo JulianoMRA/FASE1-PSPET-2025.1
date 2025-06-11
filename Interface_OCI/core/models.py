@@ -21,7 +21,22 @@ class Participante(models.Model):
         return self.nome
 
 class Prova(models.Model):
+
+    ANO_CHOICES = [(str(ano), str(ano)) for ano in range(2011, 2026)]
+    NIVEL_CHOICES = [
+        ('Iniciacao A', 'Iniciação A'),
+        ('Iniciacao B', 'Iniciação B'),
+        ('Programacao', 'Programação'),
+    ]
+    FASE_CHOICES = [
+        ('Fase 1', 'Fase 1'),
+        ('Fase 2', 'Fase 2'),
+    ]
+
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    ano = models.CharField(max_length=4, choices=ANO_CHOICES, default='2024')
+    nivel = models.CharField(max_length=20, choices=NIVEL_CHOICES, default='Iniciacao A')
+    fase = models.CharField(max_length=10, choices=FASE_CHOICES, default='Fase 1')
     gabarito = models.CharField(max_length=20)
 
     def __str__(self):

@@ -17,5 +17,5 @@ class ParticipanteAdmin(admin.ModelAdmin):
 
 @admin.register(Prova)
 class ProvaAdmin(admin.ModelAdmin):
-    list_display = ('id', 'gabarito')
+    list_display = ('id', 'ano', 'nivel', 'fase', 'gabarito')
     search_fields = ('id',)
