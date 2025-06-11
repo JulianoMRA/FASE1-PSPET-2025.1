@@ -11,11 +11,11 @@ class EscolaAdmin(admin.ModelAdmin):
 
 @admin.register(Participante)
 class ParticipanteAdmin(admin.ModelAdmin):
-    list_display = ('id_participante', 'nome', 'escola')
+    list_display = ('id', 'nome', 'escola')
     search_fields = ('nome', 'id_participante')
     list_filter = ('escola',)
 
 @admin.register(Prova)
 class ProvaAdmin(admin.ModelAdmin):
-    list_display = ('id_prova', 'gabarito')
-    search_fields = ('id_prova',)
+    list_display = ('id', 'gabarito')
+    search_fields = ('id',)

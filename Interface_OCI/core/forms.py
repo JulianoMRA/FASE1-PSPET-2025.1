@@ -7,7 +7,7 @@ from .models import Participante, Prova
 class ParticipanteForm(forms.ModelForm):
     class Meta:
         model = Participante
-        fields = ['id_participante', 'nome', 'escola']
+        fields = ['nome', 'escola']
 
 class EscolaForm(forms.ModelForm):
     class Meta:
@@ -17,4 +17,4 @@ class EscolaForm(forms.ModelForm):
 class ProvaForm(forms.ModelForm):
     class Meta:
         model = Prova
-        fields = ['id_prova', 'gabarito']
+        fields = ['gabarito']
