@@ -99,22 +99,34 @@ def cadastrar_prova(request):
         form = ProvaForm()
     return render(request, 'core/cadastrar_prova.html', {'form': form})
 
-## @csrf_exempt
+@login_required
 def ler_gabarito(request):
+    provas = Prova.objects.filter(user=request.user)  
     if request.method == 'POST':
         file = request.FILES['imagem']
+        prova_id = request.POST.get('prova_id')  
+        prova = Prova.objects.filter(id=prova_id, user=request.user).first()
 
-        if file:
+        if file and prova:
             dados = file.read()
             tipo = b'.' + file.name.split('.')[-1].encode()
-
             array_type = ctypes.c_ubyte * len(dados)
             array_instance = array_type.from_buffer_copy(dados)
 
             resultado = leitor.read_image_data(tipo, array_instance, len(dados))
 
-            print(f"Erro: {resultado.erro}")
-            print(f"ID Prova: {resultado.id_prova}")
-            print(f"ID Participante: {resultado.id_participante}")
-            print(f"Leitura: {resultado.leitura.decode('utf-8')}")
-    return render(request, 'core/index.html')
+            gabarito_lido = resultado.leitura.decode('utf-8')
+
+            nota = 0
+            for i in range(20):
+                if gabarito_lido[i] == prova.gabarito[i]:
+                    nota += 1 
+
+            return render(request, 'core/ler_gabarito.html', {
+                'gabarito_lido': gabarito_lido,
+                'nota': nota,
+                'prova_gabarito': prova.gabarito,
+                'provas': provas
+            })
+    
+    return render(request, 'core/ler_gabarito.html', {'provas': provas})
