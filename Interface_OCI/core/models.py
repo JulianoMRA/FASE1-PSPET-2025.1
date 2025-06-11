@@ -22,6 +22,9 @@ class Participante(models.Model):
 
 class Prova(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    ano = models.IntegerField(default=2023)
+    nivel = models.CharField(max_length=32, default='Ini_1')
+    fase = models.CharField(max_length=32, default='Fase 1')
     gabarito = models.CharField(max_length=20)
 
     def __str__(self):
