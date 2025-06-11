@@ -9,7 +9,7 @@ from ctypes import *
 ctypes.CDLL('./libraylib.so.550', mode=RTLD_GLOBAL)
 ctypes.CDLL('./libZXing.so.3', mode=RTLD_GLOBAL)
 
-leitor = ctypes.CDLL('./core/libleitor.so')
+leitor = ctypes.CDLL('./libleitor.so')
 
 class Reading(Structure):
     _fields_ = [
