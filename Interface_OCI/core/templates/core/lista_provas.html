@@ -9,14 +9,22 @@
         <tr>
             <th>ID</th>
             <th>Gabarito</th>
+            <th>Ano</th>
+            <th>Nível</th>
+            <th>Fase</th>
         </tr>
         {% for prova in provas %}
         <tr>
             <td>{{ prova.id }}</td>
             <td>{{ prova.gabarito }}</td>
+            <td>{{ prova.ano }}</td>
+            <td>{{ prova.nivel }}</td>
+            <td>{{ prova.fase }}</td>
         </tr>
         {% endfor %}
     </table>
     <a href="{% url 'cadastrar_prova' %}">Nova Prova</a>
+    <br>
+    <a href="{% url 'index' %}">Início</a>
 </body>
 </html>
