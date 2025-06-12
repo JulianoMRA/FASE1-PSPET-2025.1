@@ -11,13 +11,14 @@
 
     <h2>Menu:</h2>
     <ul>
-        <li><a href="{% url 'lista_escolas' %}">Lista de Escolas</a></li>
-        <li><a href="{% url 'lista_participantes' %}">Lista de Participantes</a></li>
-        <li><a href="{% url 'lista_provas' %}">Lista de Provas</a></li>
-        <li><a href="{% url 'cadastrar_escola' %}">Cadastrar Escola</a></li>
-        <li><a href="{% url 'cadastrar_participante' %}">Cadastrar Participante</a></li>
-        <li><a href="{% url 'cadastrar_prova' %}">Cadastrar Prova</a></li>
-        <li><a href="{% url 'ler_gabarito' %}">Ler Gabarito</a></li>
+        <li><a href="{% url 'lista_escolas' %}">Lista de Escolas</a></li><br>
+        <li><a href="{% url 'lista_participantes' %}">Lista de Participantes</a></li><br>
+        <li><a href="{% url 'lista_provas' %}">Lista de Provas</a></li><br>
+        <li><a href="{% url 'lista_gabaritos_lidos' %}">Lista de Gabaritos</a></li><br>
+        <li><a href="{% url 'cadastrar_escola' %}">Cadastrar Escola</a></li><br>
+        <li><a href="{% url 'cadastrar_participante' %}">Cadastrar Participante</a></li><br>
+        <li><a href="{% url 'cadastrar_prova' %}">Cadastrar Prova</a></li><br>
+        <li><a href="{% url 'ler_gabarito' %}">Ler Gabarito</a></li><br>
     </ul>
     <p><a href="{% url 'logout' %}">Sair</a></p>
 </body>

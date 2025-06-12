@@ -41,3 +41,13 @@ class Prova(models.Model):
 
     def __str__(self):
         return f'Prova {self.id} - Gabarito: {self.gabarito}'
+
+class GabaritoLido(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    prova = models.ForeignKey(Prova, on_delete=models.CASCADE)
+    gabarito_lido = models.CharField(max_length=20)
+    nota = models.FloatField(default=0.0)
+    participante = models.ForeignKey(Participante, on_delete=models.CASCADE, null=True, blank=True)
+
+    def __str__(self):
+        return f'Gabarito Lido: {self.gabarito_lido} - Nota: {self.nota}'

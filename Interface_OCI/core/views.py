@@ -6,7 +6,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-from .models import Escola, Participante, Prova
+from .models import Escola, Participante, Prova, GabaritoLido
 from .forms import ParticipanteForm, ProvaForm, EscolaForm
 from django.db.models import Max
 import ctypes
@@ -70,6 +70,11 @@ def lista_provas(request):
     return render(request, 'core/lista_provas.html', {'provas': provas})
 
 @login_required
+def lista_gabaritos_lidos(request):
+    gabaritos = GabaritoLido.objects.filter(user=request.user).select_related('prova').order_by('-id')
+    return render(request, 'core/lista_gabaritos_lidos.html', {'gabaritos': gabaritos})
+
+@login_required
 def cadastrar_participante(request):
     if request.method == 'POST':
         form = ParticipanteForm(request.POST)
@@ -110,22 +115,24 @@ def cadastrar_prova(request):
 
 @login_required
 def ler_gabarito(request):
-    provas = Prova.objects.filter(user=request.user)  
+    provas = Prova.objects.filter(user=request.user)
+    participantes = Participante.objects.filter(user=request.user)
     if request.method == 'POST':
         file = request.FILES['imagem']
         pesos = request.POST.get('pesos')
         pont_max = 10
-    
+
         if pesos:
             pesos = pesos.split(';')
             for i in range(len(pesos)):
-                pont_max+=(int(pesos[i].split('_')[1])-1)*0.5
-        
-        prova_id = request.POST.get('prova_id')  
-        prova = Prova.objects.filter(id=prova_id, user=request.user).first()
-        print('prova: ', prova)
+                pont_max += (int(pesos[i].split('_')[1]) - 1) * 0.5
 
-        if file and prova:
+        prova_id = request.POST.get('prova_id')
+        participante_id = request.POST.get('participante_id')
+        prova = Prova.objects.filter(id=prova_id, user=request.user).first()
+        participante = Participante.objects.filter(id=participante_id, user=request.user).first()
+
+        if file and prova and participante:
             dados = file.read()
             tipo = b'.' + file.name.split('.')[-1].encode()
             array_type = ctypes.c_ubyte * len(dados)
@@ -149,14 +156,24 @@ def ler_gabarito(request):
                         
             nota_final = (nota/pont_max)*10
             nota_final = round(nota_final, 2)
+
+            GabaritoLido.objects.create(
+                user=request.user,
+                prova=prova,
+                participante=participante,
+                gabarito_lido=gabarito_lido,
+                nota=nota_final
+            )
+
             return render(request, 'core/ler_gabarito.html', {
                 'gabarito_lido': gabarito_lido,
                 'nota': nota_final,
                 'prova_gabarito': prova.gabarito,
-                'provas': provas
+                'provas': provas,
+                'participantes': participantes
             })
-    
-    return render(request, 'core/ler_gabarito.html', {'provas': provas})
+
+    return render(request, 'core/ler_gabarito.html', {'provas': provas, 'participantes': participantes})
 
 @login_required
 def excluir_prova(request, prova_id):

@@ -19,6 +19,14 @@
                 <option value="{{ prova.id }}">{{ prova.id_prova }} - {{ prova.ano }} - {{ prova.nivel }} - {{ prova.fase }}</option>
             {% endfor %}
         </select>
+        <br><br>
+        <label for="participante">Selecione o participante:</label>
+        <br>
+        <select name="participante_id" required>
+            {% for participante in participantes %}
+                <option value="{{ participante.id }}">{{participante.id}} - {{ participante.nome }} - {{ participante.escola.nome }}</option>
+            {% endfor %}
+        </select>
         
         <button type="submit">Subir Gabarito</button>
     </form>

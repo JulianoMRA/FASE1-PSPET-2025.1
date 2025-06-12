@@ -1,5 +1,5 @@
 from django import forms
-from .models import Participante, Prova
+from .models import Participante, Prova, Escola
 
 # Este arquivo define os formulários da aplicação Interface_OCI.
 # Os formulários são usados para validar e processar dados de entrada do usuário.
@@ -11,7 +11,7 @@ class ParticipanteForm(forms.ModelForm):
 
 class EscolaForm(forms.ModelForm):
     class Meta:
-        model = Participante.escola.field.related_model
+        model = Escola
         fields = ['nome']
 
 class ProvaForm(forms.ModelForm):

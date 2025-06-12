@@ -27,7 +27,10 @@ urlpatterns = [
     # URLs referentes à leitura de gabaritos
     path('enviar_gabarito/', views.ler_gabarito, name='enviar_gabarito'),
     path('ler_gabarito/', views.ler_gabarito, name='ler_gabarito'),
-    
+
+    # URLs para lista de gabaritos lidos
+    path('gabaritos_lidos/', views.lista_gabaritos_lidos, name='lista_gabaritos_lidos'),
+
     # Autenticação e Autorização
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('login/', auth_views.LogoutView.as_view(), name='logout'),

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gabaritos</title>
+</head>
+<body>
+    <h1>Gabaritos</h1>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Prova</th>
+            <th>Gabarito Lido</th>
+            <th>Nota</th>
+            <th>Participante</th>
+        </tr>
+        {% for gabarito in gabaritos %}
+        <tr>
+            <td>{{ gabarito.id }}</td>
+            <td>{{ gabarito.prova.id_prova }} - {{ gabarito.prova.ano }} - {{ gabarito.prova.nivel }} - {{ gabarito.prova.fase }}</td>
+            <td>{{ gabarito.gabarito_lido }}</td>
+            <td>{{ gabarito.nota }}</td>
+            <td>
+                {% if gabarito.participante %}
+                    {{ gabarito.participante.nome }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">Nenhum gabarito lido encontrado.</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{% url 'index' %}">Início</a>
+</body>
+</html>
