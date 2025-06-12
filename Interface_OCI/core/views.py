@@ -113,8 +113,17 @@ def ler_gabarito(request):
     provas = Prova.objects.filter(user=request.user)  
     if request.method == 'POST':
         file = request.FILES['imagem']
+        pesos = request.POST.get('pesos')
+        pont_max = 10
+    
+        if pesos:
+            pesos = pesos.split(';')
+            for i in range(len(pesos)):
+                pont_max+=(int(pesos[i].split('_')[1])-1)*0.5
+        
         prova_id = request.POST.get('prova_id')  
         prova = Prova.objects.filter(id=prova_id, user=request.user).first()
+        print('prova: ', prova)
 
         if file and prova:
             dados = file.read()
@@ -127,13 +136,22 @@ def ler_gabarito(request):
             gabarito_lido = resultado.leitura.decode('utf-8')
 
             nota = 0
+            peso_index = 0
             for i in range(20):
+                # mantendo a questao ponderada a ser checada >= que a questao sendo checada no gabarito
+                if pesos and i > int(pesos[peso_index].split('_')[0]) and peso_index < len(pesos)-1:
+                    peso_index += 1
                 if gabarito_lido[i] == prova.gabarito[i]:
-                    nota += 1 
-
+                    if pesos and i == int(pesos[peso_index].split('_')[0]):
+                        nota+=int(pesos[peso_index].split('_')[1])*0.5
+                    else:
+                        nota+=.5
+                        
+            nota_final = (nota/pont_max)*10
+            nota_final = round(nota_final, 2)
             return render(request, 'core/ler_gabarito.html', {
                 'gabarito_lido': gabarito_lido,
-                'nota': nota,
+                'nota': nota_final,
                 'prova_gabarito': prova.gabarito,
                 'provas': provas
             })
