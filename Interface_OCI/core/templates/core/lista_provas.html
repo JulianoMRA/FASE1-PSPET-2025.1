@@ -20,6 +20,7 @@
             <td>{{ prova.ano }}</td>
             <td>{{ prova.nivel }}</td>
             <td>{{ prova.fase }}</td>
+            <td><a href="{% url 'excluir_prova' prova.id %}" onclick="return confirm('Tem certeza que deseja excluir esta prova?');">Excluir</a></td>
         </tr>
         {% endfor %}
     </table>
