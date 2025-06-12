@@ -16,6 +16,7 @@
             <td>{{ participante.id }}</td>
             <td>{{ participante.nome }}</td>
             <td>{{ participante.escola.nome }}</td>
+            <td><a href="{% url 'excluir_participante' participante.id %}" onclick="return confirm('Tem certeza que deseja excluir este participante?');">Excluir</a></td>
         </tr>
         {% endfor %}
     </table>

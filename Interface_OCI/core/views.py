@@ -1,14 +1,26 @@
-from django.shortcuts import render, redirect
-# from django.views.decorators.csrf import csrf_exempt
+# Este arquivo define as views da aplicação Interface_OCI.
+# As views são responsáveis por processar as requisições HTTP e retornar as respostas apropriadas.
+
+
+# Importando as bibliotecas necessárias
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-
 from .models import Escola, Participante, Prova
 from .forms import ParticipanteForm, ProvaForm, EscolaForm
 from django.db.models import Max
-
 import ctypes
 from ctypes import *
+
+
+# Carregando as bibliotecas compartilhadas necessárias
+# As bibliotecas devem estar no mesmo diretório que este script ou em um diretório acessível pelo sistema.
+# As bibliotecas são carregadas com o modo RTLD_GLOBAL para que suas funções possam ser acessadas globalmente.
+# As bibliotecas são necessárias para a leitura de imagens e processamento de dados.
+# As bibliotecas devem ser compiladas para a arquitetura correta do sistema (x86_64, ARM, etc.).
+# As bibliotecas devem ser compatíveis com a versão do Python utilizada.
+# As bibliotecas devem ser instaladas no sistema ou no ambiente virtual utilizado pelo Django.
+
 
 ctypes.CDLL('./libraylib.so.550', mode=RTLD_GLOBAL)
 ctypes.CDLL('./libZXing.so.3', mode=RTLD_GLOBAL)
@@ -25,9 +37,6 @@ class Reading(Structure):
 
 leitor.read_image_data.argtypes = [ctypes.c_char_p, ctypes.POINTER(ctypes.c_ubyte), ctypes.c_int]
 leitor.read_image_data.restype = Reading
-
-# Este arquivo define as views da aplicação Interface_OCI.
-# As views são responsáveis por processar as requisições HTTP e retornar as respostas apropriadas.
 
 def signup(request):
     if request.method == 'POST':
@@ -130,3 +139,21 @@ def ler_gabarito(request):
             })
     
     return render(request, 'core/ler_gabarito.html', {'provas': provas})
+
+@login_required
+def excluir_prova(request, prova_id):
+    prova = get_object_or_404(Prova, id=prova_id, user=request.user)
+    prova.delete()
+    return redirect('lista_provas')
+
+@login_required
+def excluir_participante(request, participante_id):
+    participante = get_object_or_404(Participante, id=participante_id, user=request.user)
+    participante.delete()
+    return redirect('lista_participantes')
+
+@login_required
+def excluir_escola(request, escola_id):
+    escola = get_object_or_404(Escola, id=escola_id, user=request.user)
+    escola.delete()
+    return redirect('lista_escolas')
