@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload do Gabarito</title>
+</head>
+<body>
+    <h1>Upload do Gabarito</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="imagem">Escolha a imagem do gabarito:</label>
+        <br>
+        <input type="file" name="imagem" id="imagem" accept="image/*" required>
+        <br>
+        <br>
+        <label for="prova">Selecione a prova para comparar:</label>
+        <br>
+        <select name="prova_id" required>
+            {% for prova in provas %}
+                <option value="{{ prova.id }}">{{ prova.id_prova }} - {{ prova.ano }} - {{ prova.nivel }} - {{ prova.fase }}</option>
+            {% endfor %}
+        </select>
+        
+        <button type="submit">Subir Gabarito</button>
+    </form>
+
+    <hr>
+
+    <h2>Resultado do Gabarito:</h2>
+
+    {% if gabarito_lido %}
+        <p><strong>Gabarito Lido:</strong> {{ gabarito_lido }}</p>
+        <p><strong>Nota:</strong> {{ nota }}/20</p>
+    {% endif %}
+
+    {% if prova_gabarito %}
+        <p><strong>Gabarito da Prova Selecionada:</strong> {{ prova_gabarito }}</p>
+    {% endif %}
+
+    <a href="{% url 'index' %}">Início</a>
+</body>
+</html>

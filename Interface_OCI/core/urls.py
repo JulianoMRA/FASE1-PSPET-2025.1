@@ -14,6 +14,8 @@ urlpatterns = [
     path('cadastrar_escola/', views.cadastrar_escola, name='cadastrar_escola'),
     path('cadastrar_prova/', views.cadastrar_prova, name='cadastrar_prova'),
     path('enviar_gabarito/', views.ler_gabarito, name='enviar_gabarito'),
+    path('ler_gabarito/', views.ler_gabarito, name='ler_gabarito'),
+    
     # Autenticação e Autorização
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('login/', auth_views.LogoutView.as_view(), name='logout'),
