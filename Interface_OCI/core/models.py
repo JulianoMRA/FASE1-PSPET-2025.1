@@ -32,7 +32,7 @@ class Prova(models.Model):
         ('Fase 1', 'Fase 1'),
         ('Fase 2', 'Fase 2'),
     ]
-
+    id_prova = models.CharField(max_length=3, unique=True, default='001')
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     ano = models.CharField(max_length=4, choices=ANO_CHOICES, default='2024')
     nivel = models.CharField(max_length=20, choices=NIVEL_CHOICES, default='Iniciacao A')
