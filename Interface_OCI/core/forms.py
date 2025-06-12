@@ -17,4 +17,4 @@ class EscolaForm(forms.ModelForm):
 class ProvaForm(forms.ModelForm):
     class Meta:
         model = Prova
-        fields = ['ano', 'nivel', 'fase', 'gabarito']
+        fields = ['id_prova', 'ano', 'nivel', 'fase', 'gabarito']
