@@ -132,6 +132,7 @@ def ler_gabarito(request):
         pesos_input = request.POST.get('pesos', '').strip()
         prova_id = request.POST.get('prova_id')
         participante_id = request.POST.get('participante_id')
+        codigo = request.POST.get('codigo')  
         prova = Prova.objects.filter(id=prova_id, user=request.user).first()
         participante = Participante.objects.filter(id=participante_id, user=request.user).first()
 
@@ -149,7 +150,7 @@ def ler_gabarito(request):
             except Exception:
                 pass  # Se houver erro, ignora e usa pesos padrão
 
-        if file and prova and participante:
+        if file and prova and participante and codigo:
             dados = file.read()
             tipo = b'.' + file.name.split('.')[-1].encode()
             array_type = ctypes.c_ubyte * len(dados)
@@ -172,7 +173,8 @@ def ler_gabarito(request):
                 prova=prova,
                 participante=participante,
                 gabarito_lido=gabarito_lido,
-                nota=nota_final
+                nota=nota_final,
+                codigo=codigo  # salva o código informado
             )
 
             return render(request, 'core/ler_gabarito.html', {

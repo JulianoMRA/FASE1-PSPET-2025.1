@@ -8,10 +8,10 @@
     <a href="{% url 'index' %}">Início</a>
     <h2>Escolas</h2>
     <table border="1">
-        <tr><th>ID</th><th>Nome</th><th>Ações</th></tr>
+        <tr><th>Código</th><th>Nome</th><th>Ações</th></tr>
         {% for escola in escolas %}
         <tr>
-            <td>{{ escola.id }}</td>
+            <td>{{ escola.codigo|default:escola.id }}</td>
             <td>{{ escola.nome }}</td>
             <td>
                 <a href="{% url 'editar_escola' escola.id %}">Editar</a> |
@@ -25,10 +25,10 @@
 
     <h2>Participantes</h2>
     <table border="1">
-        <tr><th>ID</th><th>Nome</th><th>Escola</th><th>Ações</th></tr>
+        <tr><th>Código</th><th>Nome</th><th>Escola</th><th>Ações</th></tr>
         {% for participante in participantes %}
         <tr>
-            <td>{{ participante.id }}</td>
+            <td>{{ participante.codigo|default:participante.id }}</td>
             <td>{{ participante.nome }}</td>
             <td>{{ participante.escola.nome }}</td>
             <td>
@@ -43,10 +43,10 @@
 
     <h2>Provas</h2>
     <table border="1">
-        <tr><th>ID</th><th>Gabarito</th><th>Ano</th><th>Nível</th><th>Fase</th><th>Ações</th></tr>
+        <tr><th>Código</th><th>Gabarito</th><th>Ano</th><th>Nível</th><th>Fase</th><th>Ações</th></tr>
         {% for prova in provas %}
         <tr>
-            <td>{{ prova.id }}</td>
+            <td>{{ prova.codigo|default:prova.id }}</td>
             <td>{{ prova.gabarito }}</td>
             <td>{{ prova.ano }}</td>
             <td>{{ prova.nivel }}</td>
@@ -73,7 +73,7 @@
         </tr>
         {% for gabarito in gabaritos %}
         <tr>
-            <td>{{ gabarito.id }}</td>
+            <td>{{ gabarito.codigo|default:gabarito.id }}</td>
             <td>{{ gabarito.prova.id_prova }} - {{ gabarito.prova.ano }} - {{ gabarito.prova.nivel }} - {{ gabarito.prova.fase }}</td>
             <td>{{ gabarito.gabarito_lido }}</td>
             <td>{{ gabarito.nota }} / 10</td>
