@@ -74,7 +74,7 @@
         {% for gabarito in gabaritos %}
         <tr>
             <td>{{ gabarito.codigo|default:gabarito.id }}</td>
-            <td>{{ gabarito.prova.id_prova }} - {{ gabarito.prova.ano }} - {{ gabarito.prova.nivel }} - {{ gabarito.prova.fase }}</td>
+            <td>{{ gabarito.prova.ano }} - {{ gabarito.prova.nivel }} - {{ gabarito.prova.fase }}</td>
             <td>{{ gabarito.gabarito_lido }}</td>
             <td>{{ gabarito.nota }} / 10</td>
             <td>

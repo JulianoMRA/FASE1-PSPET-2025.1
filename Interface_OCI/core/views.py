@@ -121,71 +121,112 @@ def dashboard(request):
 
 @login_required
 def ler_gabarito(request):
-    """
-    Upload, leitura e correção de gabarito.
-    Permite informar pesos especiais para cada questão.
-    """
     provas = Prova.objects.filter(user=request.user)
     participantes = Participante.objects.filter(user=request.user)
+
     if request.method == 'POST':
-        file = request.FILES['imagem']
-        pesos_input = request.POST.get('pesos', '').strip()
-        prova_id = request.POST.get('prova_id')
-        participante_id = request.POST.get('participante_id')
-        codigo = request.POST.get('codigo')  
-        prova = Prova.objects.filter(id=prova_id, user=request.user).first()
-        participante = Participante.objects.filter(id=participante_id, user=request.user).first()
+        # Passo 1: Upload e leitura da imagem
+        if 'imagem' in request.FILES:
+            file = request.FILES['imagem']
+            prova_id = request.POST.get('prova_id')
+            participante_id = request.POST.get('participante_id')
+            codigo = request.POST.get('codigo')
+            pesos_input = request.POST.get('pesos', '').strip()
+            prova = Prova.objects.filter(id=prova_id, user=request.user).first()
+            participante = Participante.objects.filter(id=participante_id, user=request.user).first()
 
-        # Parse dos pesos: por padrão, todas as questões têm peso 1
-        pesos = [1] * 20
-        if pesos_input:
-            try:
-                for par in pesos_input.split(','):
-                    if ':' in par:
-                        idx, peso = par.split(':')
-                        idx = int(idx.strip()) - 1  # questões começam em 1
-                        peso = float(peso.strip())
-                        if 0 <= idx < 20:
-                            pesos[idx] = peso
-            except Exception:
-                pass  # Se houver erro, ignora e usa pesos padrão
+            # Parse dos pesos
+            pesos = [1] * 20
+            if pesos_input:
+                try:
+                    for par in pesos_input.split(','):
+                        if ':' in par:
+                            idx, peso = par.split(':')
+                            idx = int(idx.strip()) - 1
+                            peso = float(peso.strip())
+                            if 0 <= idx < 20:
+                                pesos[idx] = peso
+                except Exception:
+                    pass
 
-        if file and prova and participante and codigo:
+            # Leitura do gabarito
             dados = file.read()
             tipo = b'.' + file.name.split('.')[-1].encode()
             array_type = ctypes.c_ubyte * len(dados)
             array_instance = array_type.from_buffer_copy(dados)
-
             resultado = leitor.read_image_data(tipo, array_instance, len(dados))
             gabarito_lido = resultado.leitura.decode('utf-8')
 
+            # Mostra para o usuário editar/confirmar antes de salvar
+            return render(request, 'core/ler_gabarito.html', {
+                'gabarito_lido': gabarito_lido,
+                'prova_gabarito': prova.gabarito if prova else '',
+                'provas': provas,
+                'participantes': participantes,
+                'prova_id': prova_id,
+                'participante_id': participante_id,
+                'codigo': codigo,
+                'pesos': pesos_input,
+                'step': 2  # indica que está no passo de edição/validação
+            })
+
+        # Passo 2: Edição/validação e salvamento
+        elif 'gabarito_lido' in request.POST:
+            gabarito_lido = request.POST.get('gabarito_lido')
+            prova_id = request.POST.get('prova_id')
+            participante_id = request.POST.get('participante_id')
+            codigo = request.POST.get('codigo')
+            pesos_input = request.POST.get('pesos', '').strip()
+            prova = Prova.objects.filter(id=prova_id, user=request.user).first()
+            participante = Participante.objects.filter(id=participante_id, user=request.user).first()
+
+            # Parse dos pesos
+            pesos = [1] * 20
+            if pesos_input:
+                try:
+                    for par in pesos_input.split(','):
+                        if ':' in par:
+                            idx, peso = par.split(':')
+                            idx = int(idx.strip()) - 1
+                            peso = float(peso.strip())
+                            if 0 <= idx < 20:
+                                pesos[idx] = peso
+                except Exception:
+                    pass
+
+            # Calcula a nota
             nota = 0
             peso_total = sum(pesos)
             for i in range(20):
                 if gabarito_lido[i] == prova.gabarito[i]:
                     nota += pesos[i]
-
             nota_final = (nota / peso_total) * 10
             nota_final = round(nota_final, 2)
 
+            # Salva no banco
             GabaritoLido.objects.create(
                 user=request.user,
                 prova=prova,
                 participante=participante,
                 gabarito_lido=gabarito_lido,
                 nota=nota_final,
-                codigo=codigo  # salva o código informado
+                codigo=codigo
             )
 
             return render(request, 'core/ler_gabarito.html', {
                 'gabarito_lido': gabarito_lido,
                 'nota': nota_final,
-                'prova_gabarito': prova.gabarito,
+                'prova_gabarito': prova.gabarito if prova else '',
                 'provas': provas,
-                'participantes': participantes
+                'participantes': participantes,
+                'success': True
             })
 
-    return render(request, 'core/ler_gabarito.html', {'provas': provas, 'participantes': participantes})
+    # GET ou início do POST
+    return render(request, 'core/ler_gabarito.html', {
+        'provas': provas,
+        'participantes': participantes
+    })
 
 # =========================
 # EXCLUSÃO DE REGISTROS
@@ -267,11 +308,9 @@ def editar_gabarito_lido(request, gabarito_id):
     """Edita um gabarito lido cadastrado (nota e participante)."""
     gabarito = get_object_or_404(GabaritoLido, id=gabarito_id, user=request.user)
     if request.method == 'POST':
-        if 'nota' in request.POST and 'participante_id' in request.POST:
-            gabarito.nota = float(request.POST['nota'])
-            participante_id = request.POST['participante_id']
-            if participante_id:
-                gabarito.participante_id = participante_id
+        participante_id = request.POST.get('participante_id')
+        if participante_id:
+            gabarito.participante_id = participante_id
             gabarito.save()
             return redirect('dashboard')
     participantes = Participante.objects.filter(user=request.user)
