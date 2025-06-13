@@ -11,15 +11,13 @@
 
     <h2>Menu:</h2>
     <ul>
-        <li><a href="{% url 'lista_escolas' %}">Lista de Escolas</a></li><br>
-        <li><a href="{% url 'lista_participantes' %}">Lista de Participantes</a></li><br>
-        <li><a href="{% url 'lista_provas' %}">Lista de Provas</a></li><br>
-        <li><a href="{% url 'lista_gabaritos_lidos' %}">Lista de Gabaritos</a></li><br>
-        <li><a href="{% url 'cadastrar_escola' %}">Cadastrar Escola</a></li><br>
-        <li><a href="{% url 'cadastrar_participante' %}">Cadastrar Participante</a></li><br>
-        <li><a href="{% url 'cadastrar_prova' %}">Cadastrar Prova</a></li><br>
-        <li><a href="{% url 'ler_gabarito' %}">Ler Gabarito</a></li><br>
+        <li><a href="{% url 'dashboard' %}">Dashboard Geral</a></li>
+        <li><a href="{% url 'dashboard_cadastros' %}">Dashboard de Cadastros</a></li>
+        <li><a href="{% url 'ler_gabarito' %}">Ler Gabarito</a></li>
     </ul>
-    <p><a href="{% url 'logout' %}">Sair</a></p>
+    <form action="{% url 'logout' %}" method="post" style="display:inline;">
+    {% csrf_token %}
+    <button type="submit">Sair</button>
+</form>
 </body>
 </html>

@@ -5,6 +5,7 @@
 </head>
 <body>
     <h1>Upload do Gabarito</h1>
+    <a href="{% url 'index' %}">Início</a><br>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <label for="imagem">Escolha a imagem do gabarito:</label>
@@ -56,6 +57,5 @@
         <p><strong>Gabarito da Prova Selecionada:</strong> {{ prova_gabarito }}</p>
     {% endif %}
 
-    <a href="{% url 'index' %}">Início</a>
 </body>
 </html>

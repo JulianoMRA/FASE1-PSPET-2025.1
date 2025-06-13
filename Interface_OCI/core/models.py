@@ -1,17 +1,24 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# Este arquivo define os modelos do Django para a aplicação Interface_OCI.
-# Os modelos representam as tabelas do banco de dados e são usados para interagir com os dados.
-# Importante: Certifique-se de que o Django esteja configurado corretamente para usar este modelo.
-# Definindo os modelos para a aplicação Interface_OCI
+# =========================
+# Modelos da aplicação Interface_OCI
+# =========================
+# Estes modelos representam as tabelas do banco de dados e suas relações.
+
+# -------------------------
+# Modelo Escola
+# -------------------------
 class Escola(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     nome = models.CharField(max_length=64)
 
     def __str__(self):
         return self.nome
-    
+
+# -------------------------
+# Modelo Participante
+# -------------------------
 class Participante(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     nome = models.CharField(max_length=64)
@@ -20,8 +27,10 @@ class Participante(models.Model):
     def __str__(self):
         return self.nome
 
+# -------------------------
+# Modelo Prova
+# -------------------------
 class Prova(models.Model):
-
     ANO_CHOICES = [(str(ano), str(ano)) for ano in range(2011, 2026)]
     NIVEL_CHOICES = [
         ('Iniciacao A', 'Iniciação A'),
@@ -32,6 +41,7 @@ class Prova(models.Model):
         ('Fase 1', 'Fase 1'),
         ('Fase 2', 'Fase 2'),
     ]
+
     id_prova = models.CharField(max_length=3, unique=True, default='001')
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     ano = models.CharField(max_length=4, choices=ANO_CHOICES, default='2024')
@@ -42,6 +52,9 @@ class Prova(models.Model):
     def __str__(self):
         return f'Prova {self.id} - Gabarito: {self.gabarito}'
 
+# -------------------------
+# Modelo GabaritoLido
+# -------------------------
 class GabaritoLido(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     prova = models.ForeignKey(Prova, on_delete=models.CASCADE)
@@ -51,3 +64,5 @@ class GabaritoLido(models.Model):
 
     def __str__(self):
         return f'Gabarito Lido: {self.gabarito_lido} - Nota: {self.nota}'
+
+# Fim do arquivo de modelos
