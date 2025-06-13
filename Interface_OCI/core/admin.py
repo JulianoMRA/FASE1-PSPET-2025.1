@@ -25,7 +25,7 @@ class ParticipanteAdmin(admin.ModelAdmin):
 @admin.register(Prova)
 class ProvaAdmin(admin.ModelAdmin):
     list_display = ('id', 'codigo', 'ano', 'nivel', 'fase', 'gabarito')
-    search_fields = ('id_prova', 'codigo')
+    search_fields = ('codigo')
     list_filter = ('codigo', 'ano', 'nivel', 'fase')
     ordering = ('codigo',)
 
