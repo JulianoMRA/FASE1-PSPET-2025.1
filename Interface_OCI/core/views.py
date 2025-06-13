@@ -101,13 +101,22 @@ def dashboard_cadastros(request):
 
 @login_required
 def dashboard(request):
-    """
-    Dashboard centralizado com todas as listas (escolas, participantes, provas, gabaritos lidos).
-    """
-    escolas = Escola.objects.filter(user=request.user)
-    participantes = Participante.objects.filter(user=request.user)
-    provas = Prova.objects.filter(user=request.user)
-    gabaritos = GabaritoLido.objects.filter(user=request.user).select_related('prova', 'participante')
+    escolas = list(Escola.objects.filter(user=request.user))
+    participantes = list(Participante.objects.filter(user=request.user))
+    provas = list(Prova.objects.filter(user=request.user))
+    gabaritos = list(GabaritoLido.objects.filter(user=request.user).select_related('prova', 'participante'))
+
+    def codigo_key(obj):
+        try:
+            return int(obj.codigo)
+        except (ValueError, TypeError, AttributeError):
+            return 0
+
+    escolas.sort(key=codigo_key)
+    participantes.sort(key=codigo_key)
+    provas.sort(key=codigo_key)
+    gabaritos.sort(key=codigo_key)
+
     return render(request, 'core/dashboard.html', {
         'escolas': escolas,
         'participantes': participantes,
