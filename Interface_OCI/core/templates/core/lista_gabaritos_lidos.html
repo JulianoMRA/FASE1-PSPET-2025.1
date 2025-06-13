@@ -18,7 +18,7 @@
             <td>{{ gabarito.id }}</td>
             <td>{{ gabarito.prova.id_prova }} - {{ gabarito.prova.ano }} - {{ gabarito.prova.nivel }} - {{ gabarito.prova.fase }}</td>
             <td>{{ gabarito.gabarito_lido }}</td>
-            <td>{{ gabarito.nota }}</td>
+            <td>{{ gabarito.nota }} / 10</td>
             <td>
                 {% if gabarito.participante %}
                     {{ gabarito.participante.nome }}

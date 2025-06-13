@@ -119,18 +119,25 @@ def ler_gabarito(request):
     participantes = Participante.objects.filter(user=request.user)
     if request.method == 'POST':
         file = request.FILES['imagem']
-        pesos = request.POST.get('pesos')
-        pont_max = 10
-
-        if pesos:
-            pesos = pesos.split(';')
-            for i in range(len(pesos)):
-                pont_max += (int(pesos[i].split('_')[1]) - 1) * 0.5
-
+        pesos_input = request.POST.get('pesos', '').strip()
         prova_id = request.POST.get('prova_id')
         participante_id = request.POST.get('participante_id')
         prova = Prova.objects.filter(id=prova_id, user=request.user).first()
         participante = Participante.objects.filter(id=participante_id, user=request.user).first()
+
+        # Parse dos pesos: por padrão, todas as questões têm peso 1
+        pesos = [1] * 20
+        if pesos_input:
+            try:
+                for par in pesos_input.split(','):
+                    if ':' in par:
+                        idx, peso = par.split(':')
+                        idx = int(idx.strip()) - 1  # questões começam em 1
+                        peso = float(peso.strip())
+                        if 0 <= idx < 20:
+                            pesos[idx] = peso
+            except Exception:
+                pass  # Se houver erro, ignora e usa pesos padrão
 
         if file and prova and participante:
             dados = file.read()
@@ -139,22 +146,15 @@ def ler_gabarito(request):
             array_instance = array_type.from_buffer_copy(dados)
 
             resultado = leitor.read_image_data(tipo, array_instance, len(dados))
-
             gabarito_lido = resultado.leitura.decode('utf-8')
 
             nota = 0
-            peso_index = 0
+            peso_total = sum(pesos)
             for i in range(20):
-                # mantendo a questao ponderada a ser checada >= que a questao sendo checada no gabarito
-                if pesos and i > int(pesos[peso_index].split('_')[0]) and peso_index < len(pesos)-1:
-                    peso_index += 1
                 if gabarito_lido[i] == prova.gabarito[i]:
-                    if pesos and i == int(pesos[peso_index].split('_')[0]):
-                        nota+=int(pesos[peso_index].split('_')[1])*0.5
-                    else:
-                        nota+=.5
-                        
-            nota_final = (nota/pont_max)*10
+                    nota += pesos[i]
+
+            nota_final = (nota / peso_total) * 10
             nota_final = round(nota_final, 2)
 
             GabaritoLido.objects.create(

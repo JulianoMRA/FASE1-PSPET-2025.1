@@ -27,7 +27,19 @@
                 <option value="{{ participante.id }}">{{participante.id}} - {{ participante.nome }} - {{ participante.escola.nome }}</option>
             {% endfor %}
         </select>
-        
+        <br><br>
+        <label for="pesos">Pesos especiais (ex: 1:2,2:2,3:2):</label>
+        <br>
+        <input type="text" name="pesos" id="pesos" placeholder="Ex: 1:2,2:2,3:2">
+        <br>
+        <br>
+        <small>
+            Informe os pesos das questões no formato <strong>número_da_questão:peso</strong>, separados por vírgula.<br>
+            Exemplo: <strong>1:2,2:2,3:2</strong> atribui peso 2 para as questões 1, 2 e 3.<br>
+            Questões não informadas terão peso 1 automaticamente.<br>
+            O cálculo da nota considera os pesos e normaliza para uma escala de 0 a 10.
+        </small>
+        <br><br>
         <button type="submit">Subir Gabarito</button>
     </form>
 
@@ -37,7 +49,7 @@
 
     {% if gabarito_lido %}
         <p><strong>Gabarito Lido:</strong> {{ gabarito_lido }}</p>
-        <p><strong>Nota:</strong> {{ nota }}/20</p>
+        <p><strong>Nota:</strong> {{ nota }}/10</p>
     {% endif %}
 
     {% if prova_gabarito %}
