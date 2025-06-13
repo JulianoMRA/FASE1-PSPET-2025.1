@@ -5,37 +5,53 @@
 </head>
 <body>
     <h1>Upload do Gabarito</h1>
+    <a href="{% url 'index' %}">Início</a><br>
+
+    {% if not step %}
+    <!-- Passo 1: Upload e leitura -->
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <label for="imagem">Escolha a imagem do gabarito:</label>
-        <br>
-        <input type="file" name="imagem" id="imagem" accept="image/*" required>
-        <br>
-        <br>
-        <label for="prova">Selecione a prova para comparar:</label>
-        <br>
+        <input type="file" name="imagem" id="imagem" accept="image/*" required><br><br>
+        <label for="codigo">Código do Gabarito:</label>
+        <input type="text" name="codigo" id="codigo" maxlength="15" required><br><br>
+        <label for="prova_id">Prova:</label>
         <select name="prova_id" required>
             {% for prova in provas %}
-                <option value="{{ prova.id }}">{{ prova.id_prova }} - {{ prova.ano }} - {{ prova.nivel }} - {{ prova.fase }}</option>
+                <option value="{{ prova.id }}">{{ prova.codigo|default:prova.id }} - {{ prova.ano }} - {{ prova.nivel }} - {{ prova.fase }}</option>
             {% endfor %}
-        </select>
-        
-        <button type="submit">Subir Gabarito</button>
+        </select><br><br>
+        <label for="participante_id">Participante:</label>
+        <select name="participante_id" required>
+            {% for participante in participantes %}
+                <option value="{{ participante.id }}">{{ participante.codigo|default:participante.id }} - {{ participante.nome }}</option>
+            {% endfor %}
+        </select><br><br>
+        <label for="pesos">Pesos (opcional):</label>
+        <input type="text" name="pesos" id="pesos" value=""><br><br>
+        <button type="submit">Ler Gabarito</button>
     </form>
-
-    <hr>
-
-    <h2>Resultado do Gabarito:</h2>
-
-    {% if gabarito_lido %}
-        <p><strong>Gabarito Lido:</strong> {{ gabarito_lido }}</p>
-        <p><strong>Nota:</strong> {{ nota }}/20</p>
     {% endif %}
 
-    {% if prova_gabarito %}
-        <p><strong>Gabarito da Prova Selecionada:</strong> {{ prova_gabarito }}</p>
+    {% if step == 2 %}
+    <!-- Passo 2: Edição/validação e confirmação -->
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="prova_id" value="{{ prova_id }}">
+        <input type="hidden" name="participante_id" value="{{ participante_id }}">
+        <input type="hidden" name="codigo" value="{{ codigo }}">
+        <input type="hidden" name="pesos" value="{{ pesos }}">
+        <label for="gabarito_lido">Gabarito Lido (edite se necessário):</label>
+        <input type="text" name="gabarito_lido" id="gabarito_lido" value="{{ gabarito_lido }}" maxlength="20" required><br><br>
+        <button type="submit">Salvar Gabarito</button>
+    </form>
+    <p><strong>Gabarito da Prova Selecionada:</strong> {{ prova_gabarito }}</p>
     {% endif %}
 
-    <a href="{% url 'index' %}">Início</a>
+    {% if success %}
+        <hr>
+        <h2>Gabarito salvo com sucesso!</h2>
+        <p><strong>Nota:</strong> {{ nota }}/10</p>
+    {% endif %}
 </body>
 </html>

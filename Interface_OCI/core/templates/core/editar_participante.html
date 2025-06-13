@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Adicionar Participante</title>
+    <title>Editar Participante</title>
 </head>
 <body>
-    <h1>Novo Participante</h1>
+    <h1>Editar Participante</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Salvar</button>
     </form>
-    <br>
-    <a href="{% url 'index' %}">Início</a>
+    <a href="{% url 'dashboard' %}">Voltar</a>
 </body>
 </html>

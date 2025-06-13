@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar Gabarito Lido</title>
+</head>
+<body>
+    <h1>Editar Gabarito Lido</h1>
+    <form method="post">
+        {% csrf_token %}
+        <p><strong>Nota:</strong> {{ gabarito.nota }} / 10</p>
+        <label for="participante_id">Participante:</label>
+        <select name="participante_id" id="participante_id">
+            {% for participante in participantes %}
+                <option value="{{ participante.id }}" {% if gabarito.participante and gabarito.participante.id == participante.id %}selected{% endif %}>
+                    {{ participante.nome }}
+                </option>
+            {% endfor %}
+        </select><br>
+        <button type="submit">Salvar</button>
+    </form>
+    <a href="{% url 'dashboard' %}">Voltar</a>
+</body>
+</html>
