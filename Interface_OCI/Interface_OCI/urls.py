@@ -15,6 +15,9 @@ urlpatterns = [
 
     # Inclui todas as URLs da aplicação 'core'
     path('', include('core.urls')),
+
+    # URLs da API da aplicação 'core'
+    path('api/', include('core.urls_api')),
 ]
 
 # Fim do arquivo de URLs do projeto
