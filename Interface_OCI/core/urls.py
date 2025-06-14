@@ -35,6 +35,7 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('signup/', views.signup, name='signup'),
+    path('csrf/', views.get_csrf, name='get_csrf')
 ]
 
 # Fim do arquivo de URLs da aplicação Interface_OCI

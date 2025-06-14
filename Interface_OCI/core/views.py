@@ -9,6 +9,8 @@ Responsáveis por processar requisições HTTP e retornar respostas apropriadas.
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
+from django.http import JsonResponse
 from .models import Escola, Participante, Prova, GabaritoLido
 from .forms import EscolaForm, ParticipanteForm, ProvaForm
 import ctypes
@@ -35,17 +37,23 @@ leitor.read_image_data.restype = Reading
 # =========================
 # AUTENTICAÇÃO E PÁGINA INICIAL
 # =========================
-
+@csrf_exempt
 def signup(request):
     """Cadastro de novo usuário."""
     if request.method == 'POST':
+        print(request.POST)
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('login')
-    else:
-        form = UserCreationForm()
-    return render(request, 'core/signup.html', {'form': form})
+            return JsonResponse({'message': 'Usuario criado com sucesso'}, status=201)
+        else:
+            return JsonResponse({'errors': form.errors}, status=400)
+    
+    return JsonResponse({'error': 'Metodo nao permitido'})
+
+@ensure_csrf_cookie
+def get_csrf(request):
+    return JsonResponse({'message': 'CSRF cookie set'})
 
 def index(request):
     """Página inicial da aplicação, agora exibe o dashboard."""
