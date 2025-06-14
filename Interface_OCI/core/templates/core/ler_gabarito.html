@@ -29,6 +29,12 @@
         </select><br><br>
         <label for="pesos">Pesos (opcional):</label>
         <input type="text" name="pesos" id="pesos" value=""><br><br>
+        <small>
+            Informe os pesos das questões no formato <strong>número_da_questão:peso</strong>, separados por vírgula.<br>
+            Exemplo: <strong>1:2,2:2,3:2</strong> atribui peso 2 para as questões 1, 2 e 3.<br>
+            Questões não informadas terão peso 1 automaticamente.<br>
+            O cálculo da nota considera os pesos e normaliza para uma escala de 0 a 10.
+        </small><br>
         <button type="submit">Ler Gabarito</button><br>
         <a href="{% url 'index' %}">Voltar</a>
     </form>
