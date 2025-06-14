@@ -7,17 +7,128 @@
 </head>
 <body>
     <h1>Bem-vindo à Interface OCI</h1>
-    <p>Acesse as páginas abaixo para visualizar ou cadastrar informações:</p>
-
-    <h2>Menu:</h2>
+    <form action="{% url 'logout' %}" method="post" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit">Sair</button>
+    </form><br>
+    <h1>Dashboard Principal</h1>
+    <h2>Ações rápidas</h2>
     <ul>
-        <li><a href="{% url 'dashboard' %}">Dashboard Geral</a></li>
-        <li><a href="{% url 'dashboard_cadastros' %}">Dashboard de Cadastros</a></li>
+        <li><a href="{% url 'cadastrar_escola' %}">Cadastrar Escola</a></li>
+        <li><a href="{% url 'cadastrar_participante' %}">Cadastrar Participante</a></li>
+        <li><a href="{% url 'cadastrar_prova' %}">Cadastrar Prova</a></li>
         <li><a href="{% url 'ler_gabarito' %}">Ler Gabarito</a></li>
     </ul>
-    <form action="{% url 'logout' %}" method="post" style="display:inline;">
-    {% csrf_token %}
-    <button type="submit">Sair</button>
-</form>
+    <hr>
+
+    <h2>Escolas</h2>
+    <table border="1">
+        <tr>
+            <th>Código</th>
+            <th>Nome</th>
+            <th>Ações</th>
+        </tr>
+        {% for escola in escolas %}
+        <tr>
+            <td>{{ escola.codigo }}</td>
+            <td>{{ escola.nome }}</td>
+            <td>
+                <a href="{% url 'editar_escola' escola.id %}">Editar</a>
+                <a href="{% url 'excluir_escola' escola.id %}">Excluir</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">Nenhuma escola cadastrada.</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Participantes</h2>
+    <table border="1">
+        <tr>
+            <th>Código</th>
+            <th>Nome</th>
+            <th>Escola</th>
+            <th>Ações</th>
+        </tr>
+        {% for participante in participantes %}
+        <tr>
+            <td>{{ participante.codigo }}</td>
+            <td>{{ participante.nome }}</td>
+            <td>{{ participante.escola.nome }}</td>
+            <td>
+                <a href="{% url 'editar_participante' participante.id %}">Editar</a>
+                <a href="{% url 'excluir_participante' participante.id %}">Excluir</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">Nenhum participante cadastrado.</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Provas</h2>
+    <table border="1">
+        <tr>
+            <th>Código</th>
+            <th>Ano</th>
+            <th>Nível</th>
+            <th>Fase</th>
+            <th>Ações</th>
+        </tr>
+        {% for prova in provas %}
+        <tr>
+            <td>{{ prova.codigo }}</td>
+            <td>{{ prova.ano }}</td>
+            <td>{{ prova.nivel }}</td>
+            <td>{{ prova.fase }}</td>
+            <td>
+                <a href="{% url 'editar_prova' prova.id %}">Editar</a>
+                <a href="{% url 'excluir_prova' prova.id %}">Excluir</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">Nenhuma prova cadastrada.</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Gabaritos Lidos</h2>
+    <table border="1">
+        <tr>
+            <th>Código</th>
+            <th>Participante</th>
+            <th>Escola</th>
+            <th>Prova</th>
+            <th>Ano</th>
+            <th>Nível</th>
+            <th>Fase</th>
+            <th>Nota</th>
+            <th>Ações</th>
+        </tr>
+        {% for gabarito in gabaritos %}
+        <tr>
+            <td>{{ gabarito.codigo }}</td>
+            <td>{{ gabarito.participante.nome }}</td>
+            <td>{{ gabarito.participante.escola.nome }}</td>
+            <td>{{ gabarito.prova.codigo }}</td>
+            <td>{{ gabarito.prova.ano }}</td>
+            <td>{{ gabarito.prova.nivel }}</td>
+            <td>{{ gabarito.prova.fase }}</td>
+            <td>{{ gabarito.nota }}</td>
+            <td>
+                <a href="{% url 'editar_gabarito_lido' gabarito.id %}">Editar</a>
+                <a href="{% url 'excluir_gabarito_lido' gabarito.id %}">Excluir</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6">Nenhum gabarito lido encontrado.</td>
+        </tr>
+        {% endfor %}
+    </table>
 </body>
 </html>

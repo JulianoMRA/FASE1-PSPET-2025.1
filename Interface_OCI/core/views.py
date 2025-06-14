@@ -10,7 +10,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from .models import Escola, Participante, Prova, GabaritoLido
-from .forms import ParticipanteForm, ProvaForm, EscolaForm
+from .forms import EscolaForm, ParticipanteForm, ProvaForm
 import ctypes
 from ctypes import *
 
@@ -48,59 +48,10 @@ def signup(request):
     return render(request, 'core/signup.html', {'form': form})
 
 def index(request):
-    """Página inicial da aplicação."""
+    """Página inicial da aplicação, agora exibe o dashboard."""
     if not request.user.is_authenticated:
         return redirect('login')
-    return render(request, 'core/index.html')
 
-# =========================
-# DASHBOARD DE CADASTROS (Centralizado)
-# =========================
-
-@login_required
-def dashboard_cadastros(request):
-    """
-    Dashboard para cadastros rápidos de escola, participante e prova.
-    """
-    escola_form = EscolaForm(prefix='escola')
-    participante_form = ParticipanteForm(prefix='participante')
-    prova_form = ProvaForm(prefix='prova')
-
-    if request.method == 'POST':
-        if 'escola-submit' in request.POST:
-            escola_form = EscolaForm(request.POST, prefix='escola')
-            if escola_form.is_valid():
-                escola = escola_form.save(commit=False)
-                escola.user = request.user
-                escola.save()
-                return redirect('dashboard_cadastros')
-        elif 'participante-submit' in request.POST:
-            participante_form = ParticipanteForm(request.POST, prefix='participante')
-            if participante_form.is_valid():
-                participante = participante_form.save(commit=False)
-                participante.user = request.user
-                participante.save()
-                return redirect('dashboard_cadastros')
-        elif 'prova-submit' in request.POST:
-            prova_form = ProvaForm(request.POST, prefix='prova')
-            if prova_form.is_valid():
-                prova = prova_form.save(commit=False)
-                prova.user = request.user
-                prova.save()
-                return redirect('dashboard_cadastros')
-
-    return render(request, 'core/dashboard_cadastros.html', {
-        'escola_form': escola_form,
-        'participante_form': participante_form,
-        'prova_form': prova_form,
-    })
-
-# =========================
-# DASHBOARD CENTRALIZADO DE LISTAGEM/EDIÇÃO/EXCLUSÃO
-# =========================
-
-@login_required
-def dashboard(request):
     escolas = list(Escola.objects.filter(user=request.user))
     participantes = list(Participante.objects.filter(user=request.user))
     provas = list(Prova.objects.filter(user=request.user))
@@ -117,7 +68,7 @@ def dashboard(request):
     provas.sort(key=codigo_key)
     gabaritos.sort(key=codigo_key)
 
-    return render(request, 'core/dashboard.html', {
+    return render(request, 'core/index.html', {
         'escolas': escolas,
         'participantes': participantes,
         'provas': provas,
@@ -324,5 +275,48 @@ def editar_gabarito_lido(request, gabarito_id):
             return redirect('dashboard')
     participantes = Participante.objects.filter(user=request.user)
     return render(request, 'core/editar_gabarito_lido.html', {'gabarito': gabarito, 'participantes': participantes})
+
+# =========================
+# CADASTRO DE NOVOS REGISTROS
+# =========================
+
+@login_required
+def cadastrar_escola(request):
+    if request.method == 'POST':
+        form = EscolaForm(request.POST)
+        if form.is_valid():
+            escola = form.save(commit=False)
+            escola.user = request.user
+            escola.save()
+            return redirect('dashboard')
+    else:
+        form = EscolaForm()
+    return render(request, 'core/cadastrar_escola.html', {'form': form})
+
+@login_required
+def cadastrar_participante(request):
+    if request.method == 'POST':
+        form = ParticipanteForm(request.POST)
+        if form.is_valid():
+            participante = form.save(commit=False)
+            participante.user = request.user
+            participante.save()
+            return redirect('dashboard')
+    else:
+        form = ParticipanteForm()
+    return render(request, 'core/cadastrar_participante.html', {'form': form})
+
+@login_required
+def cadastrar_prova(request):
+    if request.method == 'POST':
+        form = ProvaForm(request.POST)
+        if form.is_valid():
+            prova = form.save(commit=False)
+            prova.user = request.user
+            prova.save()
+            return redirect('dashboard')
+    else:
+        form = ProvaForm()
+    return render(request, 'core/cadastrar_prova.html', {'form': form})
 
 # Fim do arquivo de views
