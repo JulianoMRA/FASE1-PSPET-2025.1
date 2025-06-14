@@ -41,7 +41,6 @@ leitor.read_image_data.restype = Reading
 def signup(request):
     """Cadastro de novo usuário."""
     if request.method == 'POST':
-        print(request.POST)
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()

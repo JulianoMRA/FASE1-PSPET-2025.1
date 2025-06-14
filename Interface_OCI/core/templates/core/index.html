@@ -12,7 +12,7 @@
         <button type="submit">Sair</button>
     </form><br>
     <h1>Dashboard Principal</h1>
-    
+
     <hr>
 
     <h2>Escolas</h2>
@@ -29,7 +29,7 @@
             <td>{{ escola.nome }}</td>
             <td>
                 <a href="{% url 'editar_escola' escola.id %}">Editar</a>
-                <a href="{% url 'excluir_escola' escola.id %}">Excluir</a>
+                <a href="{% url 'excluir_escola' escola.id %}" onclick="return confirm('Tem certeza que deseja excluir esta escola?');">Excluir</a>
             </td>
         </tr>
         {% empty %}
@@ -55,7 +55,7 @@
             <td>{{ participante.escola.nome }}</td>
             <td>
                 <a href="{% url 'editar_participante' participante.id %}">Editar</a>
-                <a href="{% url 'excluir_participante' participante.id %}">Excluir</a>
+                <a href="{% url 'excluir_participante' participante.id %}" onclick="return confirm('Tem certeza que deseja excluir este participante?');">Excluir</a>
             </td>
         </tr>
         {% empty %}
@@ -83,7 +83,7 @@
             <td>{{ prova.fase }}</td>
             <td>
                 <a href="{% url 'editar_prova' prova.id %}">Editar</a>
-                <a href="{% url 'excluir_prova' prova.id %}">Excluir</a>
+                <a href="{% url 'excluir_prova' prova.id %}" onclick="return confirm('Tem certeza que deseja excluir esta prova?');">Excluir</a>
             </td>
         </tr>
         {% empty %}
@@ -119,7 +119,7 @@
             <td>{{ gabarito.nota }}</td>
             <td>
                 <a href="{% url 'editar_gabarito_lido' gabarito.id %}">Editar</a>
-                <a href="{% url 'excluir_gabarito_lido' gabarito.id %}">Excluir</a>
+                <a href="{% url 'excluir_gabarito_lido' gabarito.id %}" onclick="return confirm('Tem certeza que deseja excluir este gabarito lido?');">Excluir</a>
             </td>
         </tr>
         {% empty %}
