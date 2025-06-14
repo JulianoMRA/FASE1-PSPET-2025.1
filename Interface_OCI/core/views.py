@@ -56,7 +56,7 @@ def get_csrf(request):
     return JsonResponse({'message': 'CSRF cookie set'})
 
 def index(request):
-    """Página inicial da aplicação, agora exibe o dashboard."""
+    """Página inicial da aplicação."""
     if not request.user.is_authenticated:
         return redirect('login')
 
@@ -205,28 +205,28 @@ def excluir_prova(request, prova_id):
     """Exclui uma prova cadastrada."""
     prova = get_object_or_404(Prova, id=prova_id, user=request.user)
     prova.delete()
-    return redirect('dashboard')
+    return redirect('index')
 
 @login_required
 def excluir_participante(request, participante_id):
     """Exclui um participante cadastrado."""
     participante = get_object_or_404(Participante, id=participante_id, user=request.user)
     participante.delete()
-    return redirect('dashboard')
+    return redirect('index')
 
 @login_required
 def excluir_escola(request, escola_id):
     """Exclui uma escola cadastrada."""
     escola = get_object_or_404(Escola, id=escola_id, user=request.user)
     escola.delete()
-    return redirect('dashboard')
+    return redirect('index')
 
 @login_required
 def excluir_gabarito_lido(request, gabarito_id):
     """Exclui um gabarito lido cadastrado."""
     gabarito = get_object_or_404(GabaritoLido, id=gabarito_id, user=request.user)
     gabarito.delete()
-    return redirect('dashboard')
+    return redirect('index')
 
 # =========================
 # EDIÇÃO DE REGISTROS
@@ -240,7 +240,7 @@ def editar_escola(request, escola_id):
         form = EscolaForm(request.POST, instance=escola)
         if form.is_valid():
             form.save()
-            return redirect('dashboard')
+            return redirect('index')
     else:
         form = EscolaForm(instance=escola)
     return render(request, 'core/editar_escola.html', {'form': form, 'escola': escola})
@@ -253,7 +253,7 @@ def editar_participante(request, participante_id):
         form = ParticipanteForm(request.POST, instance=participante)
         if form.is_valid():
             form.save()
-            return redirect('dashboard')
+            return redirect('index')
     else:
         form = ParticipanteForm(instance=participante)
     return render(request, 'core/editar_participante.html', {'form': form, 'participante': participante})
@@ -266,22 +266,25 @@ def editar_prova(request, prova_id):
         form = ProvaForm(request.POST, instance=prova)
         if form.is_valid():
             form.save()
-            return redirect('dashboard')
+            return redirect('index')
     else:
         form = ProvaForm(instance=prova)
     return render(request, 'core/editar_prova.html', {'form': form, 'prova': prova})
 
 @login_required
 def editar_gabarito_lido(request, gabarito_id):
-    """Edita um gabarito lido cadastrado (nota e participante)."""
+    """Edita um gabarito lido cadastrado (código e participante)."""
     gabarito = get_object_or_404(GabaritoLido, id=gabarito_id, user=request.user)
+    participantes = Participante.objects.filter(user=request.user)
     if request.method == 'POST':
+        novo_codigo = request.POST.get('codigo')
         participante_id = request.POST.get('participante_id')
+        if novo_codigo:
+            gabarito.codigo = novo_codigo
         if participante_id:
             gabarito.participante_id = participante_id
-            gabarito.save()
-            return redirect('dashboard')
-    participantes = Participante.objects.filter(user=request.user)
+        gabarito.save()
+        return redirect('index')
     return render(request, 'core/editar_gabarito_lido.html', {'gabarito': gabarito, 'participantes': participantes})
 
 # =========================
@@ -296,7 +299,7 @@ def cadastrar_escola(request):
             escola = form.save(commit=False)
             escola.user = request.user
             escola.save()
-            return redirect('dashboard')
+            return redirect('index')
     else:
         form = EscolaForm()
     return render(request, 'core/cadastrar_escola.html', {'form': form})
@@ -309,7 +312,7 @@ def cadastrar_participante(request):
             participante = form.save(commit=False)
             participante.user = request.user
             participante.save()
-            return redirect('dashboard')
+            return redirect('index')
     else:
         form = ParticipanteForm()
     return render(request, 'core/cadastrar_participante.html', {'form': form})
@@ -322,7 +325,7 @@ def cadastrar_prova(request):
             prova = form.save(commit=False)
             prova.user = request.user
             prova.save()
-            return redirect('dashboard')
+            return redirect('index')
     else:
         form = ProvaForm()
     return render(request, 'core/cadastrar_prova.html', {'form': form})

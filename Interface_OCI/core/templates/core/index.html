@@ -12,16 +12,11 @@
         <button type="submit">Sair</button>
     </form><br>
     <h1>Dashboard Principal</h1>
-    <h2>Ações rápidas</h2>
-    <ul>
-        <li><a href="{% url 'cadastrar_escola' %}">Cadastrar Escola</a></li>
-        <li><a href="{% url 'cadastrar_participante' %}">Cadastrar Participante</a></li>
-        <li><a href="{% url 'cadastrar_prova' %}">Cadastrar Prova</a></li>
-        <li><a href="{% url 'ler_gabarito' %}">Ler Gabarito</a></li>
-    </ul>
+    
     <hr>
 
     <h2>Escolas</h2>
+    <h3><a href="{% url 'cadastrar_escola' %}">Cadastrar Escola</a></h3>
     <table border="1">
         <tr>
             <th>Código</th>
@@ -45,6 +40,7 @@
     </table>
 
     <h2>Participantes</h2>
+    <h3><a href="{% url 'cadastrar_participante' %}">Cadastrar Participante</a></h3>
     <table border="1">
         <tr>
             <th>Código</th>
@@ -70,6 +66,7 @@
     </table>
 
     <h2>Provas</h2>
+    <h3><a href="{% url 'cadastrar_prova' %}">Cadastrar Prova</a></h3>
     <table border="1">
         <tr>
             <th>Código</th>
@@ -97,6 +94,7 @@
     </table>
 
     <h2>Gabaritos Lidos</h2>
+    <h3><a href="{% url 'ler_gabarito' %}">Ler Gabarito</a></h3>
     <table border="1">
         <tr>
             <th>Código</th>

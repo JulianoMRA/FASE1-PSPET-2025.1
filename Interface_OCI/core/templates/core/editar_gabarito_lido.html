@@ -7,6 +7,8 @@
     <h1>Editar Gabarito Lido</h1>
     <form method="post">
         {% csrf_token %}
+        <label for="codigo">Código:</label>
+        <input type="text" id="codigo" name="codigo" value="{{ gabarito.codigo }}" required><br>
         <p><strong>Nota:</strong> {{ gabarito.nota }} / 10</p>
         <label for="participante_id">Participante:</label>
         <select name="participante_id" id="participante_id">
