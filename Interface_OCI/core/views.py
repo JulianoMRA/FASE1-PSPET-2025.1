@@ -8,12 +8,14 @@ Responsáveis por processar requisições HTTP e retornar respostas apropriadas.
 # =========================
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from django.http import JsonResponse
 from .models import Escola, Participante, Prova, GabaritoLido
 from .forms import EscolaForm, ParticipanteForm, ProvaForm
 import ctypes
+import json
 from ctypes import *
 
 # =========================
@@ -49,6 +51,16 @@ def signup(request):
             return JsonResponse({'errors': form.errors}, status=400)
     
     return JsonResponse({'error': 'Metodo nao permitido'})
+
+@csrf_exempt
+def api_login(request):
+    username = request.POST.get('username')
+    password = request.POST.get('password1')
+    user = authenticate(request, username=username, password=password)
+    if user is not None:
+        login(request, user)
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False, 'error': 'Credenciais inválidas'}, status=401)
 
 @ensure_csrf_cookie
 def get_csrf(request):

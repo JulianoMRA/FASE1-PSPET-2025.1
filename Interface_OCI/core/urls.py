@@ -32,7 +32,7 @@ urlpatterns = [
     path('excluir_gabarito_lido/<int:gabarito_id>/', views.excluir_gabarito_lido, name='excluir_gabarito_lido'),
 
     # Autenticação
-    path('login/', auth_views.LoginView.as_view(), name='login'),
+    path('login/', views.api_login, name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('signup/', views.signup, name='signup'),
     path('csrf/', views.get_csrf, name='get_csrf')
