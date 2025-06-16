@@ -310,10 +310,10 @@ def cadastrar_escola(request):
             escola = form.save(commit=False)
             escola.user = request.user
             escola.save()
-            return redirect('index')
-    else:
-        form = EscolaForm()
-    return render(request, 'core/cadastrar_escola.html', {'form': form})
+            return JsonResponse({'message': 'Escola cadastrada'})
+        else:
+            return JsonResponse({'error': 'Dados invalidos'})
+    return JsonResponse({'error': 'Metodo nao permitido'})
 
 @login_required
 def cadastrar_participante(request):
@@ -323,10 +323,10 @@ def cadastrar_participante(request):
             participante = form.save(commit=False)
             participante.user = request.user
             participante.save()
-            return redirect('index')
-    else:
-        form = ParticipanteForm()
-    return render(request, 'core/cadastrar_participante.html', {'form': form})
+            return JsonResponse({'message': 'Participante cadastrado'})
+        else:
+            return JsonResponse({'error': 'Dados invalidos'})
+    return JsonResponse({'error': 'Metodo nao permitido'})
 
 @login_required
 def cadastrar_prova(request):
@@ -336,9 +336,9 @@ def cadastrar_prova(request):
             prova = form.save(commit=False)
             prova.user = request.user
             prova.save()
-            return redirect('index')
-    else:
-        form = ProvaForm()
-    return render(request, 'core/cadastrar_prova.html', {'form': form})
+            return JsonResponse({'message': 'Prova cadastrada'})
+        else:
+            return JsonResponse({'error': 'Dados invalidos'})
+    return JsonResponse({'error': 'Metodo nao permitido'})
 
 # Fim do arquivo de views
