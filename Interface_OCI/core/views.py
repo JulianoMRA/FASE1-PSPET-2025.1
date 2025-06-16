@@ -21,10 +21,12 @@ from ctypes import *
 # =========================
 # CARREGAMENTO DAS BIBLIOTECAS NATIVAS
 # =========================
+# Carrega as bibliotecas nativas necessárias para leitura de gabaritos
 ctypes.CDLL('./libraylib.so.550', mode=RTLD_GLOBAL)
 ctypes.CDLL('./libZXing.so.3', mode=RTLD_GLOBAL)
 leitor = ctypes.CDLL('./libleitor.so')
 
+# Estrutura para receber o resultado da leitura do gabarito
 class Reading(Structure):
     _fields_ = [
         ('erro', ctypes.c_int),
@@ -33,12 +35,14 @@ class Reading(Structure):
         ('leitura', ctypes.c_char_p)
     ]
 
+# Define os tipos de argumentos e retorno da função de leitura
 leitor.read_image_data.argtypes = [ctypes.c_char_p, ctypes.POINTER(ctypes.c_ubyte), ctypes.c_int]
 leitor.read_image_data.restype = Reading
 
 # =========================
 # AUTENTICAÇÃO E PÁGINA INICIAL
 # =========================
+
 @csrf_exempt
 def signup(request):
     """Cadastro de novo usuário."""
@@ -49,11 +53,12 @@ def signup(request):
             return JsonResponse({'message': 'Usuario criado com sucesso'}, status=201)
         else:
             return JsonResponse({'errors': form.errors}, status=400)
-    
+    # Retorna erro para métodos diferentes de POST
     return JsonResponse({'error': 'Metodo nao permitido'})
 
 @csrf_exempt
 def api_login(request):
+    """Realiza login via API (usado pelo frontend)."""
     username = request.POST.get('username')
     password = request.POST.get('password1')
     user = authenticate(request, username=username, password=password)
@@ -64,18 +69,21 @@ def api_login(request):
 
 @ensure_csrf_cookie
 def get_csrf(request):
+    """Endpoint para garantir que o cookie CSRF está setado."""
     return JsonResponse({'message': 'CSRF cookie set'})
 
 def index(request):
-    """Página inicial da aplicação."""
+    """Página inicial da aplicação (dashboard principal)."""
     if not request.user.is_authenticated:
         return redirect('login')
 
+    # Busca todos os registros do usuário autenticado
     escolas = list(Escola.objects.filter(user=request.user))
     participantes = list(Participante.objects.filter(user=request.user))
     provas = list(Prova.objects.filter(user=request.user))
     gabaritos = list(GabaritoLido.objects.filter(user=request.user).select_related('prova', 'participante'))
 
+    # Função auxiliar para ordenar pelo campo 'codigo'
     def codigo_key(obj):
         try:
             return int(obj.codigo)
@@ -100,6 +108,10 @@ def index(request):
 
 @login_required
 def ler_gabarito(request):
+    """
+    View para upload, leitura e correção de gabarito.
+    Possui dois passos: upload/extração e confirmação/salvamento.
+    """
     provas = Prova.objects.filter(user=request.user)
     participantes = Participante.objects.filter(user=request.user)
 
@@ -114,7 +126,7 @@ def ler_gabarito(request):
             prova = Prova.objects.filter(id=prova_id, user=request.user).first()
             participante = Participante.objects.filter(id=participante_id, user=request.user).first()
 
-            # Parse dos pesos
+            # Parse dos pesos (caso informado)
             pesos = [1] * 20
             if pesos_input:
                 try:
@@ -128,7 +140,7 @@ def ler_gabarito(request):
                 except Exception:
                     pass
 
-            # Leitura do gabarito
+            # Leitura do gabarito usando biblioteca nativa
             dados = file.read()
             tipo = b'.' + file.name.split('.')[-1].encode()
             array_type = ctypes.c_ubyte * len(dados)
@@ -173,7 +185,7 @@ def ler_gabarito(request):
                 except Exception:
                     pass
 
-            # Calcula a nota
+            # Calcula a nota do participante
             nota = 0
             peso_total = sum(pesos)
             for i in range(20):
@@ -182,7 +194,7 @@ def ler_gabarito(request):
             nota_final = (nota / peso_total) * 10
             nota_final = round(nota_final, 2)
 
-            # Salva no banco
+            # Salva o gabarito lido no banco de dados
             GabaritoLido.objects.create(
                 user=request.user,
                 prova=prova,
@@ -304,6 +316,7 @@ def editar_gabarito_lido(request, gabarito_id):
 
 @login_required
 def cadastrar_escola(request):
+    """Cadastra uma nova escola."""
     if request.method == 'POST':
         form = EscolaForm(request.POST)
         if form.is_valid():
@@ -317,6 +330,7 @@ def cadastrar_escola(request):
 
 @login_required
 def cadastrar_participante(request):
+    """Cadastra um novo participante."""
     if request.method == 'POST':
         form = ParticipanteForm(request.POST)
         if form.is_valid():
@@ -330,6 +344,7 @@ def cadastrar_participante(request):
 
 @login_required
 def cadastrar_prova(request):
+    """Cadastra uma nova prova."""
     if request.method == 'POST':
         form = ProvaForm(request.POST)
         if form.is_valid():
