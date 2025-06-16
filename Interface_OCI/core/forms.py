@@ -18,7 +18,12 @@ class ParticipanteForm(forms.ModelForm):
     class Meta:
         model = Participante
         fields = ['codigo', 'nome', 'escola']
-
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+        if user:
+            self.fields['escola'].queryset = Escola.objects.filter(user=user)
+            
 # Formulário para Prova
 class ProvaForm(forms.ModelForm):
     class Meta:
