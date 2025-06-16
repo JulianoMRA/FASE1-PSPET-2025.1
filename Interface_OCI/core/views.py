@@ -263,10 +263,8 @@ def editar_escola(request, escola_id):
         form = EscolaForm(request.POST, instance=escola)
         if form.is_valid():
             form.save()
-            return redirect('index')
-    else:
-        form = EscolaForm(instance=escola)
-    return render(request, 'core/editar_escola.html', {'form': form, 'escola': escola})
+            return JsonResponse({'message': 'Dados editados'})
+    return JsonResponse({'error': 'Metodo nao permitido'})
 
 @login_required
 def editar_participante(request, participante_id):
@@ -276,7 +274,7 @@ def editar_participante(request, participante_id):
         form = ParticipanteForm(request.POST, instance=participante)
         if form.is_valid():
             form.save()
-            return redirect('index')
+            return JsonResponse({'message': 'Dados editados'})
     else:
         form = ParticipanteForm(instance=participante)
     return render(request, 'core/editar_participante.html', {'form': form, 'participante': participante})
@@ -289,7 +287,7 @@ def editar_prova(request, prova_id):
         form = ProvaForm(request.POST, instance=prova)
         if form.is_valid():
             form.save()
-            return redirect('index')
+            return JsonResponse({'message': 'Dados editados'})
     else:
         form = ProvaForm(instance=prova)
     return render(request, 'core/editar_prova.html', {'form': form, 'prova': prova})
