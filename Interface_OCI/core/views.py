@@ -330,7 +330,7 @@ def cadastrar_escola(request):
 def cadastrar_participante(request):
     """Cadastra um novo participante."""
     if request.method == 'POST':
-        form = ParticipanteForm(request.POST)
+        form = ParticipanteForm(request.POST, user=request.user)
         if form.is_valid():
             participante = form.save(commit=False)
             participante.user = request.user
