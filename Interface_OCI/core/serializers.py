@@ -4,20 +4,23 @@ from .models import Escola, Participante, Prova, GabaritoLido
 class EscolaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Escola
-        fields = '__all__'
+        fields = ['id', 'codigo', 'nome']
 
 class ParticipanteSerializer(serializers.ModelSerializer):
+    escola = EscolaSerializer()
     class Meta:
         model = Participante
-        fields = '__all__'
+        fields = ['id', 'codigo', 'nome', 'escola']
 
 class ProvaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Prova
-        fields = '__all__'
+        fields = ['id', 'codigo', 'ano', 'nivel', 'fase']
 
 class GabaritoLidoSerializer(serializers.ModelSerializer):
+    participante = ParticipanteSerializer()
+    prova = ProvaSerializer()
     class Meta:
         model = GabaritoLido
-        fields = '__all__'
+        fields = ['id', 'codigo', 'participante', 'prova', 'nota']
         
