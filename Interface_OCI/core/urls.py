@@ -8,34 +8,34 @@ from django.contrib.auth import views as auth_views
 # Este arquivo define as rotas que mapeiam requisições HTTP para as views correspondentes.
 
 urlpatterns = [
-    # Página inicial
+    # Página inicial (dashboard principal)
     path('', views.index, name='index'),
     
-    # Cadastro individual
+    # Rotas de cadastro individual para cada entidade
     path('escolas/novo/', views.cadastrar_escola, name='cadastrar_escola'),
     path('participantes/novo/', views.cadastrar_participante, name='cadastrar_participante'),
     path('provas/novo/', views.cadastrar_prova, name='cadastrar_prova'),
 
-    # Leitura de gabarito
+    # Rota para leitura de gabarito
     path('ler_gabarito/', views.ler_gabarito, name='ler_gabarito'),
 
-    # Edição
+    # Rotas de edição para cada entidade
     path('editar_escola/<int:escola_id>/', views.editar_escola, name='editar_escola'),
     path('editar_participante/<int:participante_id>/', views.editar_participante, name='editar_participante'),
     path('editar_prova/<int:prova_id>/', views.editar_prova, name='editar_prova'),
     path('editar_gabarito_lido/<int:gabarito_id>/', views.editar_gabarito_lido, name='editar_gabarito_lido'),
 
-    # Exclusão
+    # Rotas de exclusão para cada entidade
     path('excluir_prova/<int:prova_id>/', views.excluir_prova, name='excluir_prova'),
     path('excluir_participante/<int:participante_id>/', views.excluir_participante, name='excluir_participante'),
     path('excluir_escola/<int:escola_id>/', views.excluir_escola, name='excluir_escola'),
     path('excluir_gabarito_lido/<int:gabarito_id>/', views.excluir_gabarito_lido, name='excluir_gabarito_lido'),
 
-    # Autenticação
-    path('login/', views.api_login, name='login'),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    path('signup/', views.signup, name='signup'),
-    path('csrf/', views.get_csrf, name='get_csrf')
+    # Rotas de autenticação (login, logout, cadastro e CSRF)
+    path('login/', views.api_login, name='login'),  # View customizada para login
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),  # Logout padrão do Django
+    path('signup/', views.signup, name='signup'),  # Cadastro de novo usuário
+    path('csrf/', views.get_csrf, name='get_csrf')  # Endpoint para obter token CSRF
 ]
 
 # Fim do arquivo de URLs da aplicação Interface_OCI
