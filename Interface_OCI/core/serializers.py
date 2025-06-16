@@ -18,7 +18,7 @@ class ParticipanteSerializer(serializers.ModelSerializer):
 class ProvaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Prova
-        fields = ['id', 'codigo', 'ano', 'nivel', 'fase']
+        fields = ['id', 'codigo', 'ano', 'nivel', 'fase', 'gabarito']
 
 # Serializador para o modelo GabaritoLido, incluindo participante e prova relacionados
 class GabaritoLidoSerializer(serializers.ModelSerializer):
@@ -26,4 +26,4 @@ class GabaritoLidoSerializer(serializers.ModelSerializer):
     prova = ProvaSerializer()                # Serializa o objeto Prova relacionado
     class Meta:
         model = GabaritoLido
-        fields = ['id', 'codigo', 'participante', 'prova', 'nota']
+        fields = ['id', 'codigo', 'participante', 'prova', 'nota', 'gabarito_lido']
