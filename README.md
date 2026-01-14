@@ -5,7 +5,16 @@
 Este repositório contém o back-end do sistema **Interface OCI**, desenvolvido em Django, para gerenciamento de escolas, participantes, provas e leitura/correção de gabaritos.
 
 ---
+## Imagens
 
+![Tela de Login](Imagens/oci-1.jpg)
+![Tela de Login](Imagens/oci-2.jpg)
+![Tela de Login](Imagens/oci-3.jpg)
+![Tela de Login](Imagens/oci-4.jpg)
+![Tela de Login](Imagens/oci-5.jpg)
+![Tela de Login](Imagens/oci-6.jpg)
+
+---
 ## Requisitos
 
 - Python 3.10+
